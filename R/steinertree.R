@@ -1,8 +1,10 @@
+# All shortest paths between terminals (ASP)
 asp_steiner <- function (optimize, terminals, glist, color) {
         g <- glist[[1]]
     
         paths <- lapply(terminals, function (x) get.all.shortest.paths(g, x, terminals)$res)
-        nodes <- unique(unlist(paths))
+        #nodes <- unique(unlist(paths))
+        nodes <- unique(names(unlist(paths)))
         
         if (optimize) {
                 steinert <- minimum.spanning.tree(induced_subgraph(graph = g, vids = nodes))
@@ -30,35 +32,42 @@ asp_steiner <- function (optimize, terminals, glist, color) {
 
 
 
+# Randomized all shortest paths approximation (RSP)
 appr_steiner <- function (repeattimes, optimize, terminals, glist, color) {
         set <- c()
-        g   <- glist[[1]]
-    
+        g <- glist[[1]]
+        
+        # Start with the sub-graph G* consisting of all nodes and edges appearing on shortest paths between terminals
         paths <- lapply(terminals, function (x) get.all.shortest.paths(g, x, terminals)$res)
         
         r  <- 1:length(paths)
         t1 <- lapply(r, function (r) length(paths[[r]]))
-        distances <- lapply(r, function (r) lapply(1:t1[[r]], function(x, y) length(paths[[y]][[x]]), y = r))
         
+        distances <- lapply(r, function (r) lapply(1:t1[[r]], function(x, y) length(paths[[y]][[x]]), y = r))
         neighbour_distance <- max(unlist(distances))
         
-        paths <- unique(unlist(paths))
-        set   <- V(g)[paths]
+        # Note, graph has to have name attribute, because we assign names of vertices to
+        # path variable. It is much more convenient to work with names, not with ids.
+        #paths <- unique(unlist(paths))
+        paths <- unique(names(unlist(paths)))
+        #set   <- V(g)[paths]
+        set   <- V(g)[paths]$name
         size  <- length(E(minimum.spanning.tree(induced_subgraph(g, union(terminals, set)))))
-    
+        
         i <- 1
         while (i <= repeattimes) {
-                seed_list <- unlist(neighborhood(graph = g, order = neighbour_distance, nodes = terminals, mode = "all"))
+        	#seed_list <- unlist(neighborhood(graph = g, order = neighbour_distance, nodes = terminals, mode = "all"))
+                seed_list <- names(unlist(neighborhood(graph = g, order = neighbour_distance, nodes = terminals, mode = "all")))
                 seed_list <- seed_list[!(seed_list %in% terminals)]
-            
                 seed <- sample(seed_list, 1)
             
                 paths2 <- get.all.shortest.paths(g, seed, terminals)
                 paths2 <- paths2$res
 
-                seedpaths <- unique(unlist(paths2))
+                #seedpaths <- unique(unlist(paths2))
+                seedpaths <- unique(names(unlist(paths2)))
                         
-                set2  <- union(set, V(g)[seedpaths])
+                set2  <- union(set, V(g)[seedpaths]$name)
                 size2 <- length(E(minimum.spanning.tree(induced_subgraph(g, union(terminals, set2)))))
                         
                 if (size2 < size) {
@@ -67,7 +76,7 @@ appr_steiner <- function (repeattimes, optimize, terminals, glist, color) {
                 }
                         
                 seed  <- sample(set, 1, prob = NULL)
-                set2  <- V(g)[setdiff(set, seed)]
+                set2  <- V(g)[setdiff(set, seed)]$name
                 size2 <- length(E(minimum.spanning.tree(induced_subgraph(g, union(terminals, set2)))))
             
                 if (size2  < size && is.connected(minimum.spanning.tree(induced_subgraph(g, union(terminals, set2))))) {
@@ -77,7 +86,8 @@ appr_steiner <- function (repeattimes, optimize, terminals, glist, color) {
                         
                 i <- i + 1
         }
-    
+        
+        # Perform "optimization": find minimum spanning tree and remove nodes of degree 1
         if (optimize) {
                 steinert <- minimum.spanning.tree(induced_subgraph(g, union(terminals, set)))
                 a     <- V(steinert)$color
@@ -92,7 +102,7 @@ appr_steiner <- function (repeattimes, optimize, terminals, glist, color) {
     
         glst <- c()
         if (color) {
-                V(g)[setdiff(set, as.numeric(terminals))]$color <- "green"
+                V(g)[setdiff(set, terminals)]$color <- "green"
                 glst[[length(glst) + 1]]  <- g
         }
     
@@ -103,23 +113,24 @@ appr_steiner <- function (repeattimes, optimize, terminals, glist, color) {
 
 
 
+# Shortest Path Based Approximation (SP)
 steinertree2 <- function (optimize, terminals, glist, color) {
-        edges <- c()
-        g     <- glist[[1]]
-    
+        g <- glist[[1]]
+        
+        # Pick a terminal randomly and Form a subtree (sub-graph G')
         prob     <- sample(1:length(terminals), 1)
         subtree  <- terminals[[prob]]
         nsubtree <- setdiff(terminals, subtree)
-    
-        while ( !all(is.element(terminals, intersect(subtree, terminals))) ) {
-                
-                paths <- lapply(subtree, function (x) get.all.shortest.paths(g, x, nsubtree))
         
+        # Proceed until all terminals not in G'
+        while ( !all(is.element(terminals, intersect(subtree, terminals))) ) {
+                # Compute shortest paths and their lengths between each node in subtree (G') and the remaining nodes
+                paths <- lapply(subtree, function (x) get.all.shortest.paths(g, x, nsubtree))
+                
                 r <- 1:length(paths)
                 t <- sapply(r, function (r) sapply(paths[[r]]$res, length))
         
-                # Caution: length in list returns the lengh of the first cat but in array it returns
-                # number  of all enteries, so I use length for paths, but dim for t
+                # Compute a minimum for each set of lengths from each node to other nodes
                 if (class(t) == "list" || class(t) == "integer") {
                         r  <- 1:length(t)
                         t2 <- sapply(r, function (r) min(t[[r]]))
@@ -129,26 +140,33 @@ steinertree2 <- function (optimize, terminals, glist, color) {
                         t2 <- sapply(r, function (r) min(t[, r]))
                 }
         
-                # t3 is index of minimums in the minimum paths
+                # Find a path with minimum among minimum length
                 t3 <- which(t2 == min(t2))
-        
+                
+                # Note, graph has to have name attribute, because in found variable we assign names
+                # of vertices. It is much more convenient to work with names, not with ids.
                 if (length(paths) > 1) {
                         if (class(t) == "list" || class(t) == "integer")
                                 t4 <- which(t[[t3[1]]] == min(t[[t3[1]]]))
             
                         if (class(t) == "matrix")
                                 t4 <- which( t[ , t3[1]] == min(t[ , t3[1]]) )
-            
-                        edges <- union(edges, paths[[t3[1]]][t4][1]$res)
-                        found <- unlist(paths[[t3[1]]][t4][1]$res)
+                        
+                        #found <- unlist(paths[[t3[1]]][t4][1]$res)
+                        found <- names(unlist(paths[[t3[1]]][t4][1]$res))
                 } else {
-                        edges <- union(edges, paths[[1]][t3][1]$res)
-                        found <- unlist(paths[[1]][t3][1]$res)
+                	#found <- unlist(paths[[1]][t3][1]$res)
+                	found <- names(unlist(paths[[1]][t3][1]$res))
                 }
-                subtree  <- union(subtree, V(g)[unique(found)])
-                nsubtree <- setdiff(nsubtree, V(g)[unique(found)])
+                
+                # Add all vertices from all shortest paths to subtree
+                #subtree  <- union(subtree, V(g)[unique(found)])
+                subtree  <- union(subtree, V(g)[unique(found)]$name)
+                #nsubtree <- setdiff(nsubtree, V(g)[unique(found)])
+                nsubtree <- setdiff(nsubtree, V(g)[unique(found)]$name)
         }
-    
+        
+        # Perform "optimization": find minimum spanning tree and remove nodes of degree 1
         if (optimize) {
                 steinert <- minimum.spanning.tree(induced_subgraph(g, subtree))
                 a   <- V(steinert)$color
@@ -163,8 +181,8 @@ steinertree2 <- function (optimize, terminals, glist, color) {
     
         glst <- c()
         if (color) {
-                V(g)[subtree]$color               <- "green"
-                V(g)[as.numeric(terminals)]$color <- "red"
+                V(g)[subtree]$color   <- "green"
+                V(g)[terminals]$color <- "red"
                 
                 glst[[length(glst) + 1]] <- g
         }
@@ -176,11 +194,14 @@ steinertree2 <- function (optimize, terminals, glist, color) {
 
 
 
+# Minimum spanning tree based approximation (Kruskal's minimum spanning tree algorithm)
 steinertree3 <- function (optimize, terminals, glist, color) {
         makesubtrees <- function (x) {
                 if ( !is.na(any(match(t3, x))) )
+                	#return(union(subtrees[[x]],
+                	#	     found[[grep(1, match(t3, x))]][[1]]))
                         return(union(subtrees[[x]],
-                                     found[[grep(1, match(t3, x))]][[1]]))
+                                     names(found[[grep(1, match(t3, x))]][[1]])))
                 else return(subtrees[[x]])
         }
         
@@ -194,18 +215,21 @@ steinertree3 <- function (optimize, terminals, glist, color) {
         terminals <- subtrees
         nsubtrees <- lapply(r, function (r) setdiff(terminals, subtrees[r]))
     
-        # While all terminals are not added to subtree
+        # Proceed until all terminals won't be added to a subtree
         while (length(subtrees) > 1) {
+        	# Find shortest paths between different Steiner Trees and compute their lengths
                 r     <- 1:length(subtrees)
-                paths <- lapply(r,
-                                function (r) lapply(subtrees[[r]],
-                                                    function (x, y) get.all.shortest.paths(g, x, y)$res,
-                                                    y = nsubtrees[[r]]))
+                #paths <- lapply(r, function (r) lapply(subtrees[[r]],
+                #				       function (x, y) get.all.shortest.paths(g, x, y)$res,
+                #				       y = nsubtrees[[r]]))
+                paths <- lapply(r, function (r) lapply(subtrees[[r]],
+                                                       function (x, y) get.all.shortest.paths(g, x, y)$res,
+                                                       y = unlist(nsubtrees[[r]])))
                 
-                # t is list of number all pathes from all nodes in subgraph
                 r <- 1:length(paths)
                 t <- sapply(r, function (r) sapply(paths[[r]][[1]], length))
-        
+                
+                # Compute a minimum for each set of lengths from each Steiner tree to other trees
                 if (class(t) == "list" | class(t) == "integer") {
                         r  <- 1:length(t)
                         t2 <- sapply(r, function (x) min(t[[x]]))
@@ -214,11 +238,11 @@ steinertree3 <- function (optimize, terminals, glist, color) {
                         r  <- 1:dim(t)[2]
                         t2 <- sapply(r, function (r) min(t[, r]))
                 }
-        
+                
+                # Find a minimum among minimum length and paths corresponding to it
                 t3    <- which(t2 == min(t2))
                 t3len <- 1:length(t3)
-        
-                # t4 is the index of min distanc paths between each subtree
+                
                 if (length(paths) > 1) {
                         if (class(t) == "list" || class(t) == "integer" )
                                 t4 <- lapply(t3len, function (x) which(t[[t3[x]]] == min(t[[t3[x]]])))
@@ -231,11 +255,10 @@ steinertree3 <- function (optimize, terminals, glist, color) {
                         print("Error")
                 }
         
-                # We merge the terminals subgraphs and their paths here
+                # Merge subgraphs and paths
                 subtrees <- lapply(1:length(subtrees), function (x) makesubtrees(x))
         
-                # We delete repeated subtrees here
-                # We presume here length(subtrees) is more than 1
+                # Delete repeated subtrees (presume that length is more than 1)
                 i <- 1
                 j <- 2
                 while (i <= (length(subtrees) - 1)) {
@@ -252,7 +275,8 @@ steinertree3 <- function (optimize, terminals, glist, color) {
                 }
                 nsubtrees <- lapply(1:length(subtrees), function (x) setdiff(terminals, subtrees[[x]]))
         }
-    
+        
+        # Perform "optimization": find minimum spanning tree and remove nodes of degree 1
         if (optimize) {
                 steinert <- minimum.spanning.tree(induced_subgraph(g, subtrees[[1]]))
                 a   <- V(steinert)$color
@@ -267,8 +291,9 @@ steinertree3 <- function (optimize, terminals, glist, color) {
     
         glst <- c()
         if (color) {
-                V(g)[subtrees[[1]]]$color         <- "green"
-                V(g)[as.numeric(terminals)]$color <- "red"
+                V(g)[subtrees[[1]]]$color     <- "green"
+                V(g)[unlist(terminals)]$color <- "red"
+                #V(g)[terminals]$color <- "red"
                 
                 glst[[length(glst) + 1]]  <- g
         }
@@ -280,6 +305,7 @@ steinertree3 <- function (optimize, terminals, glist, color) {
 
 
 
+# Sub-graph of merged steiner trees (SPM or STM)
 steinertree8 <- function (optimize, terminals, glist, color) {
         g <- glist[[1]]
         
@@ -301,7 +327,8 @@ steinertree8 <- function (optimize, terminals, glist, color) {
     
         # Put in queue paths with minimal lengths
         for (i in 1:length(t2))
-                queue[length(queue) + 1] <- paths[t2[i]]
+        	#queue[length(queue) + 1] <- paths[t2[i]]
+                queue[[length(queue) + 1]] <- names(unlist(paths[t2[i]]))
     
         index <- length(t2)
         while (index > 0) {
@@ -310,6 +337,7 @@ steinertree8 <- function (optimize, terminals, glist, color) {
                 index     <- index - 1
         
                 if (length(intersect(unlist(terminals), unlist(edgeslist))) == length(terminals)) {
+                #if (length(intersect(unlist(terminals), names(unlist(edgeslist)))) == length(terminals)) {
                         graph_is_new <- TRUE
             
                         if (length(results_queue) == 0)
@@ -327,7 +355,8 @@ steinertree8 <- function (optimize, terminals, glist, color) {
                         if (graph_is_new == TRUE)
                                 results_queue[length(results_queue) + 1] <- edgeslist
                 } else {
-                        subtree  <- intersect(unlist(terminals), unlist(edgeslist))
+                	subtree  <- intersect(unlist(terminals), unlist(edgeslist))
+                        #subtree  <- intersect(unlist(terminals), names(unlist(edgeslist)))
                         nsubtree <- setdiff(terminals, subtree)
                         
                         paths    <- get.all.shortest.paths(g, subtree[length(subtree)], nsubtree)
@@ -337,7 +366,8 @@ steinertree8 <- function (optimize, terminals, glist, color) {
                         t2 <- which(t == min(t))
 
                         for (i in 1:length(t2))
-                                queue[[index + i]] <- union(unlist(edgeslist), unlist(paths[t2[i]]))
+                        	#queue[[index + i]] <- union(unlist(edgeslist), unlist(paths[t2[i]]))
+                                queue[[index + i]] <- union(unlist(edgeslist), names(unlist(paths[t2[i]])))
                         
                         index <- index + length(t2)
                 }
@@ -371,7 +401,8 @@ steinertree8 <- function (optimize, terminals, glist, color) {
         }
     
         if (color) {
-                V(g)[as.numeric(terminals)]$color <- "red"
+        	#V(g)[as.numeric(terminals)]$color <- "red"
+                V(g)[terminals]$color <- "red"
                 
                 glst[[length(glst) + 1]] <- g
                 glst[[length(glst) + 1]] <- steinert_list
@@ -382,7 +413,7 @@ steinertree8 <- function (optimize, terminals, glist, color) {
 }
 
 
-
+# Exact algorithm
 steinerexact <- function (terminals, glist, color) {
         rwhile <- function (lim) {
                 if (get("runloop", envir = en)) {
@@ -443,14 +474,15 @@ steinerexact <- function (terminals, glist, color) {
                 green_guys <- lapply(stgraphlist, function (x) V(x)$name)
                 green_guys <- unique(unlist(green_guys))
         
-                V(g)[green_guys]$color            <- "green"
-                V(g)[as.numeric(terminals)]$color <- "red"
+                V(g)[green_guys]$color <- "green"
+                #V(g)[as.numeric(terminals)]$color <- "red"
+                V(g)[terminals]$color  <- "red"
         
                 stgraphlist2[[length(stgraphlist2) + 1]] <- g
                 stgraphlist2[[length(stgraphlist2) + 1]] <- stgraphlist
                 stgraphlist <- stgraphlist2
         }
-    
+        
         return(stgraphlist)
 }
 
@@ -492,32 +524,32 @@ check_input <- function (type, terminals, glist) {
         if (length(V(g)) == 0 )
                 stop("Error: The graph doesn't contain vertices.")
     
-        options(warn = -1)
         if (is.null(V(g)$name)) {
                 # creating name attribute
                 V(g)$name <- as.character(1:length(V(g)))
+                attr_flag <- FALSE
         } else {
                 # creating new name and realname attributes
                 V(g)$realname <- V(g)$name
                 V(g)$name     <- as.character(1:length(V(g)))
+                attr_flag <- TRUE
         }
     
         # Mathcing names of vertices and terminals, if possible
     
-        if (class(terminals) == "character" & anyNA(as.integer(terminals))) {
-                # terminals contain realname of vertice
+        if (class(terminals) == "character") {
+                # terminals contain realname of vertices
                 if (sum(terminals %in% V(g)$realname) != length(terminals)) {
                         stop("Error: vertices names do not contain terminal names")
                 } else {
                         # Convert realnames of terminals to names (character id's)
                         terminals <- V(g)$name[match(terminals, V(g)$realname)]
                 }
-        } else if ((class(terminals) == "numeric" || class(terminals) == "integer") | !anyNA(as.integer(terminals)) ) {
+        } else if (class(terminals) == "numeric" | class(terminals) == "integer") {
                 # terminals contains id's of vertices
-                terminals <- V(g)$name[as.integer(terminals)]
+                terminals <- V(g)$name[terminals]
         } else
                 print("Error: invalid type of terminals")
-        options(warn = 0)
     
         V(g)$color            <- "yellow"
         V(g)[terminals]$color <- "red"
@@ -530,8 +562,39 @@ check_input <- function (type, terminals, glist) {
         varlist      <- c()
         varlist[[1]] <- g
         varlist[[2]] <- terminals
+        varlist[[3]] <- attr_flag
         
         return(varlist)
+}
+
+
+
+restore_name_attribute <- function (attr_flag, type, result, color) {
+	
+	if (color) {
+		if (attr_flag) {
+			V(result[[1]])$name <- V(result[[1]])$realname
+			result[[1]] <- delete_vertex_attr(result[[1]], 'realname')
+		}
+	}
+	
+	if (type == "EXA" | type == "SPM") {
+		if (attr_flag) {
+			numSteiner <- length(result[[length(result)]])
+			
+			for (i in 1:numSteiner) {
+				V(result[[length(result)]][[i]])$name <- V(result[[length(result)]][[i]])$realname
+				result[[length(result)]][[i]] <- delete_vertex_attr(result[[length(result)]][[i]], 'realname')
+			}
+		}
+        } else {
+		if (attr_flag) {
+			V(result[[length(result)]])$name <- V(result[[length(result)]])$realname
+			result[[length(result)]] <- delete_vertex_attr(result[[length(result)]], 'realname')
+		}
+	}
+	
+	return(result)
 }
 
 
@@ -549,8 +612,7 @@ check_input <- function (type, terminals, glist) {
 #' @param repeattimes a numeric scalar to specify "RSP" algorithm; number of times the optimization procedure is repeated.
 #' @param optimize a logical scalar to specify all algorithms except "EXA"; if TRUE, an optimization of the resultant
 #'                 steiner tree is performed, otherwise nothing is done.
-#' @param terminals a numeric or character vector with ids of terminals or a character vector with names of vertices 
-#'                  (only if vertices have name attribute).
+#' @param terminals a numeric vector (ids of terminals are passed) or character vector (vertices must have 'name' attribute).
 #' @param graph an igraph graph; should be undirected, otherwise it is converted to undirected.
 #' @param color a logical scalar; whether to return an original graph with terminals colored in red and
 #'              steiner nodes colored in green. Note, if several trees will be found, steiner nodes from all trees
@@ -564,13 +626,8 @@ check_input <- function (type, terminals, glist) {
 #'         (color = TRUE) Returns a list, first element of which is a colored original graph and second element is
 #'         a steiner tree (or a graph of merged trees) or list of steiner trees.
 #'         
-#' @details Firstly, if input graph doesn't have name attribute, one is created, otherwise realname attribute is created
-#'          and names is stored in it. In its turn name attribute will contain character ids of vertices. Further,
-#'          if the terminals variable has character type and it can not be converted to numeric type, the terminals are searched
-#'          among realnames. If the terminals variable has numeric type or it can be converted to numeric type,
-#'          it is considered, ids of vertices is passed.
-#'          
-#'          Note, that before algorithm is running all vertices will be colored in yellow and terminals will be colored in red.
+#' @details If input graph doesn't have 'name' attribute, one is created. In this case it will contain character ids of vertices.
+#'          Also before execution all vertices will be colored in yellow and terminals will be colored in red.
 #' 
 #' @seealso \code{\link{generate_st_samples}}
 #' 
@@ -605,6 +662,7 @@ steinertree <- function (type, repeattimes = 70, optimize = TRUE, terminals, gra
     
         glist[[1]] <- varlist[[1]]
         terminals  <- varlist[[2]]
+        attr_flag  <- varlist[[3]]
     
         if (type == "SP")
                 result <- steinertree2(optimize = optimize, terminals = terminals, glist = glist, color = color)
@@ -624,7 +682,9 @@ steinertree <- function (type, repeattimes = 70, optimize = TRUE, terminals, gra
     
         if (type == "ASP")
                 result <- asp_steiner(optimize = optimize, terminals = terminals, glist = glist, color = color)
-    
+        
+        result <- restore_name_attribute(attr_flag, type, result, color)
+        
         if (merge & (type == "EXA" | type == "SPM")) {
                 if (color) {
                         result[[2]] <- merge_steiner(treelist = result[[2]])
@@ -632,6 +692,6 @@ steinertree <- function (type, repeattimes = 70, optimize = TRUE, terminals, gra
                         result <- merge_steiner(treelist = result)
                 }
         }
-    
+        
         return(result)
 }

@@ -1,7 +1,7 @@
 Package: SteinerNet
 Type: Package
-Version: 3.0.0
-Date: 2018-06-22
+Version: 3.0.1
+Date: 2018-08-18
 Title: Steiner Tree Approach for Graph Analysis
 Description: A set of functions for finding and analysing Steiner trees. It has applications in
     biological pathway network analysis. Sadeghi (2013) <doi:10.1186/1471-2105-14-144>.
@@ -16,6 +16,7 @@ VignetteBuilder: knitr
 License: GPL-3
 Repository: CRAN
 NeedsCompilation: no
-RoxygenNote: 6.0.1
-Packaged: 2018-06-25 13:30:35 UTC; krashkov
-Date/Publication: 2018-06-25 14:43:03 UTC
+Encoding: UTF-8
+RoxygenNote: 6.1.0
+Packaged: 2018-08-19 00:34:14 UTC; cat
+Date/Publication: 2018-08-19 04:20:03 UTC
