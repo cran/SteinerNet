@@ -1,65 +1,296 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <meta name="author" content="Aleksei Krasikov" />
 
-<meta name="date" content="2018-08-19" />
+<meta name="date" content="2020-09-05" />
 
 <title>Tutorial</title>
 
 
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
 
 
 
-<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
 
 </head>
 
@@ -69,8 +300,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 <h1 class="title toc-ignore">Tutorial</h1>
-<h4 class="author"><em>Aleksei Krasikov</em></h4>
-<h4 class="date"><em>2018-08-19</em></h4>
+<h4 class="author">Aleksei Krasikov</h4>
+<h4 class="date">2020-09-05</h4>
 
 
 
@@ -93,119 +324,107 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>(SPM)</li>
 </ol>
 <p>Before we start, let’s attach several packages.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(igraph)
-<span class="kw">library</span>(SteinerNet)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(igraph)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(SteinerNet)</a></code></pre></div>
 <p>As an example of graph, we are going to take well-known “Cubical” graph. Also let’s randomly pick 4 terminals using <code>generate_st_samples</code>. We also specify <code>prob</code> variable, so at each step of random walk procedure node is accepted with probability <code>prob = 0.1</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g &lt;-<span class="st"> </span><span class="kw">graph</span>(<span class="st">&quot;Cubical&quot;</span>)
-
-<span class="kw">set.seed</span>(<span class="dv">4</span>)
-terminal_nodes &lt;-<span class="st"> </span><span class="kw">generate_st_samples</span>(<span class="dt">graph =</span> g, <span class="dt">ter_number =</span> <span class="dv">2</span>, <span class="dt">prob =</span> <span class="fl">0.1</span>)
-terminal_nodes
-<span class="co">#&gt; [[1]]</span>
-<span class="co">#&gt; [1] 5 7</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">g &lt;-<span class="st"> </span><span class="kw">graph</span>(<span class="st">&quot;Cubical&quot;</span>)</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="kw">set.seed</span>(<span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">terminal_nodes &lt;-<span class="st"> </span><span class="kw">generate_st_samples</span>(<span class="dt">graph =</span> g, <span class="dt">ter_number =</span> <span class="dv">2</span>, <span class="dt">prob =</span> <span class="fl">0.1</span>)</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">terminal_nodes</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">#&gt; [[1]]</span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co">#&gt; [1] 4 1</span></a></code></pre></div>
 <p>As we can see, there is only one element in a list and it contains ids of selected vertices. Of course, we can generate more sets of terminals (e.g. pass a vector to ter_number variable), but we do not need it now.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">V</span>(g)<span class="op">$</span>color &lt;-<span class="st"> &quot;yellow&quot;</span>
-<span class="kw">V</span>(g)[terminal_nodes[[<span class="dv">1</span>]]]<span class="op">$</span>color &lt;-<span class="st"> &quot;red&quot;</span>
-
-<span class="kw">plot</span>(g)</code></pre></div>
-<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">V</span>(g)<span class="op">$</span>color &lt;-<span class="st"> &quot;yellow&quot;</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw">V</span>(g)[terminal_nodes[[<span class="dv">1</span>]]]<span class="op">$</span>color &lt;-<span class="st"> &quot;red&quot;</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="kw">plot</span>(g)</a></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
 </div>
 <div id="shortest-paths-based-approximation-sp" class="section level2">
 <h2>Shortest paths based approximation (SP)</h2>
 <p><code>repeattimes</code>, and <code>merge</code> variables are ignored for “SP”.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">steinertree</span>(<span class="dt">type =</span> <span class="st">&quot;SP&quot;</span>, <span class="dt">terminals =</span> terminal_nodes[[<span class="dv">1</span>]],
-            <span class="dt">graph =</span> g, <span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">merge =</span> <span class="ot">FALSE</span>)
-<span class="co">#&gt; [[1]]</span>
-<span class="co">#&gt; IGRAPH 638effc UN-- 3 2 -- Cubical</span>
-<span class="co">#&gt; + attr: name (g/c), color (v/c), name (v/c)</span>
-<span class="co">#&gt; + edges from 638effc (vertex names):</span>
-<span class="co">#&gt; [1] 5--6 6--7</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">steinertree</span>(<span class="dt">type =</span> <span class="st">&quot;SP&quot;</span>, <span class="dt">terminals =</span> terminal_nodes[[<span class="dv">1</span>]],</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">            <span class="dt">graph =</span> g, <span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">merge =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="co">#&gt; [[1]]</span></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">#&gt; IGRAPH 53edd6e UN-- 2 1 -- Cubical</span></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="co">#&gt; + attr: name (g/c), color (v/c), name (v/c)</span></a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="co">#&gt; + edge from 53edd6e (vertex names):</span></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">#&gt; [1] 1--4</span></a></code></pre></div>
 <p><strong>Note, that in 3.0 version (as well as in 2.0 version) Steiner trees with different randomly chosen start nodes are not repetitively constructed, as it is written in article.</strong> This can be done by hand as follows:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tree_list &lt;-<span class="st"> </span><span class="kw">c</span>()
-
-<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">20</span>)
-        tree_list[[i]] &lt;-<span class="st"> </span><span class="kw">steinertree</span>(<span class="dt">type =</span> <span class="st">&quot;SP&quot;</span>, <span class="dt">terminals =</span> terminal_nodes[[<span class="dv">1</span>]],
-                                      <span class="dt">graph =</span> g, <span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">merge =</span> <span class="ot">FALSE</span>)
-
-<span class="co"># calculate sizes of trees</span>
-tree_list_len &lt;-<span class="st"> </span><span class="kw">unlist</span>(<span class="kw">lapply</span>(tree_list, <span class="cf">function</span> (x) <span class="kw">length</span>(<span class="kw">E</span>(x[[<span class="dv">1</span>]]))))
-
-<span class="co"># select trees with minimal size</span>
-index &lt;-<span class="st"> </span><span class="kw">which</span>(tree_list_len <span class="op">==</span><span class="st"> </span><span class="kw">min</span>(tree_list_len))</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">tree_list &lt;-<span class="st"> </span><span class="kw">c</span>()</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">20</span>)</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">        tree_list[[i]] &lt;-<span class="st"> </span><span class="kw">steinertree</span>(<span class="dt">type =</span> <span class="st">&quot;SP&quot;</span>, <span class="dt">terminals =</span> terminal_nodes[[<span class="dv">1</span>]],</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">                                      <span class="dt">graph =</span> g, <span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">merge =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="co"># calculate sizes of trees</span></a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">tree_list_len &lt;-<span class="st"> </span><span class="kw">unlist</span>(<span class="kw">lapply</span>(tree_list, <span class="cf">function</span> (x) <span class="kw">length</span>(<span class="kw">E</span>(x[[<span class="dv">1</span>]]))))</a>
+<a class="sourceLine" id="cb5-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb5-10" data-line-number="10"><span class="co"># select trees with minimal size</span></a>
+<a class="sourceLine" id="cb5-11" data-line-number="11">index &lt;-<span class="st"> </span><span class="kw">which</span>(tree_list_len <span class="op">==</span><span class="st"> </span><span class="kw">min</span>(tree_list_len))</a></code></pre></div>
 </div>
 <div id="minimum-spanning-tree-based-approximation-kb" class="section level2">
 <h2>Minimum spanning tree based approximation (KB)</h2>
 <p><code>repeattimes</code>, and <code>merge</code> variables are ignored for “KB”.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">steinertree</span>(<span class="dt">type =</span> <span class="st">&quot;KB&quot;</span>, <span class="dt">terminals =</span> terminal_nodes[[<span class="dv">1</span>]],
-            <span class="dt">graph =</span> g, <span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">merge =</span> <span class="ot">FALSE</span>)
-<span class="co">#&gt; [[1]]</span>
-<span class="co">#&gt; IGRAPH 45fc990 UN-- 3 2 -- Cubical</span>
-<span class="co">#&gt; + attr: name (g/c), color (v/c), name (v/c)</span>
-<span class="co">#&gt; + edges from 45fc990 (vertex names):</span>
-<span class="co">#&gt; [1] 5--8 7--8</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">steinertree</span>(<span class="dt">type =</span> <span class="st">&quot;KB&quot;</span>, <span class="dt">terminals =</span> terminal_nodes[[<span class="dv">1</span>]],</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">            <span class="dt">graph =</span> g, <span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">merge =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="co">#&gt; [[1]]</span></a>
+<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="co">#&gt; IGRAPH 98989b7 UN-- 2 1 -- Cubical</span></a>
+<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="co">#&gt; + attr: name (g/c), color (v/c), name (v/c)</span></a>
+<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="co">#&gt; + edge from 98989b7 (vertex names):</span></a>
+<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="co">#&gt; [1] 1--4</span></a></code></pre></div>
 </div>
 <div id="randomized-all-shortest-paths-approximation-rsp" class="section level2">
 <h2>Randomized all shortest paths approximation (RSP)</h2>
 <p><code>merge</code> variable is ignored for “RSP”.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">steinertree</span>(<span class="dt">type =</span> <span class="st">&quot;RSP&quot;</span>, <span class="dt">terminals =</span> terminal_nodes[[<span class="dv">1</span>]],
-            <span class="dt">graph =</span> g, <span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">merge =</span> <span class="ot">FALSE</span>)
-<span class="co">#&gt; [[1]]</span>
-<span class="co">#&gt; IGRAPH 4380467 UN-- 3 2 -- Cubical</span>
-<span class="co">#&gt; + attr: name (g/c), color (v/c), name (v/c)</span>
-<span class="co">#&gt; + edges from 4380467 (vertex names):</span>
-<span class="co">#&gt; [1] 5--8 7--8</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">steinertree</span>(<span class="dt">type =</span> <span class="st">&quot;RSP&quot;</span>, <span class="dt">terminals =</span> terminal_nodes[[<span class="dv">1</span>]],</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">            <span class="dt">graph =</span> g, <span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">merge =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="co">#&gt; [[1]]</span></a>
+<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="co">#&gt; IGRAPH d7a99a8 UN-- 2 1 -- Cubical</span></a>
+<a class="sourceLine" id="cb7-5" data-line-number="5"><span class="co">#&gt; + attr: name (g/c), color (v/c), name (v/c)</span></a>
+<a class="sourceLine" id="cb7-6" data-line-number="6"><span class="co">#&gt; + edge from d7a99a8 (vertex names):</span></a>
+<a class="sourceLine" id="cb7-7" data-line-number="7"><span class="co">#&gt; [1] 1--4</span></a></code></pre></div>
 </div>
 <div id="all-shortest-paths-between-terminals-asp" class="section level2">
 <h2>All shortest paths between terminals (ASP)</h2>
 <p>This method is provided <strong>only for comparison reasons</strong>. In version 2.0 it was hidden, however it is now available for the sake of convenience.</p>
 <p><code>repeattimes</code>, and <code>merge</code> variables are ignored for “ASP”.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">steinertree</span>(<span class="dt">type =</span> <span class="st">&quot;RSP&quot;</span>, <span class="dt">terminals =</span> terminal_nodes[[<span class="dv">1</span>]],
-            <span class="dt">graph =</span> g, <span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">merge =</span> <span class="ot">FALSE</span>)
-<span class="co">#&gt; [[1]]</span>
-<span class="co">#&gt; IGRAPH af15697 UN-- 3 2 -- Cubical</span>
-<span class="co">#&gt; + attr: name (g/c), color (v/c), name (v/c)</span>
-<span class="co">#&gt; + edges from af15697 (vertex names):</span>
-<span class="co">#&gt; [1] 5--6 6--7</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">steinertree</span>(<span class="dt">type =</span> <span class="st">&quot;ASP&quot;</span>, <span class="dt">terminals =</span> terminal_nodes[[<span class="dv">1</span>]],</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">            <span class="dt">graph =</span> g, <span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">merge =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="co">#&gt; [[1]]</span></a>
+<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="co">#&gt; IGRAPH 9e6a906 UN-- 2 1 -- Cubical</span></a>
+<a class="sourceLine" id="cb8-5" data-line-number="5"><span class="co">#&gt; + attr: name (g/c), color (v/c), name (v/c)</span></a>
+<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="co">#&gt; + edge from 9e6a906 (vertex names):</span></a>
+<a class="sourceLine" id="cb8-7" data-line-number="7"><span class="co">#&gt; [1] 1--4</span></a></code></pre></div>
 </div>
 <div id="exact-algorithm-exa" class="section level2">
 <h2>Exact algorithm (EXA)</h2>
 <p>Note, that this method can find multiple exact solutions, if they exist. In the following example we specify <code>merge</code> variable equals to <code>FALSE</code>, because we want to get a list of steiner trees.</p>
 <p><code>repeattimes</code> and <code>optimize</code> variables are ignored for “EXA”.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">steinertree</span>(<span class="dt">type =</span> <span class="st">&quot;EXA&quot;</span>, <span class="dt">terminals =</span> terminal_nodes[[<span class="dv">1</span>]],
-            <span class="dt">graph =</span> g, <span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">merge =</span> <span class="ot">FALSE</span>)
-<span class="co">#&gt; [[1]]</span>
-<span class="co">#&gt; IGRAPH ac57654 UN-- 3 2 -- Cubical</span>
-<span class="co">#&gt; + attr: name (g/c), color (v/c), name (v/c)</span>
-<span class="co">#&gt; + edges from ac57654 (vertex names):</span>
-<span class="co">#&gt; [1] 5--6 6--7</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[2]]</span>
-<span class="co">#&gt; IGRAPH 090209c UN-- 3 2 -- Cubical</span>
-<span class="co">#&gt; + attr: name (g/c), color (v/c), name (v/c)</span>
-<span class="co">#&gt; + edges from 090209c (vertex names):</span>
-<span class="co">#&gt; [1] 5--8 7--8</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">steinertree</span>(<span class="dt">type =</span> <span class="st">&quot;EXA&quot;</span>, <span class="dt">terminals =</span> terminal_nodes[[<span class="dv">1</span>]],</a>
+<a class="sourceLine" id="cb9-2" data-line-number="2">            <span class="dt">graph =</span> g, <span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">merge =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="co">#&gt; [[1]]</span></a>
+<a class="sourceLine" id="cb9-4" data-line-number="4"><span class="co">#&gt; IGRAPH c0d8917 UN-- 2 1 -- Cubical</span></a>
+<a class="sourceLine" id="cb9-5" data-line-number="5"><span class="co">#&gt; + attr: name (g/c), color (v/c), name (v/c)</span></a>
+<a class="sourceLine" id="cb9-6" data-line-number="6"><span class="co">#&gt; + edge from c0d8917 (vertex names):</span></a>
+<a class="sourceLine" id="cb9-7" data-line-number="7"><span class="co">#&gt; [1] 1--4</span></a></code></pre></div>
 <p>As we can see, two steiner trees are found.</p>
 </div>
 <div id="sub-graph-of-merged-steiner-trees-spm" class="section level2">
 <h2>Sub-graph of merged steiner trees (SPM)</h2>
 <p>“SPM” algorithm can return multiple graphs. Note, that in article this method is called “STM”.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">steinertree</span>(<span class="dt">type =</span> <span class="st">&quot;SPM&quot;</span>, <span class="dt">terminals =</span> terminal_nodes[[<span class="dv">1</span>]],
-            <span class="dt">graph =</span> g, <span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">merge =</span> <span class="ot">FALSE</span>)
-<span class="co">#&gt; [[1]]</span>
-<span class="co">#&gt; IGRAPH 506c2c7 UN-- 3 2 -- Cubical</span>
-<span class="co">#&gt; + attr: name (g/c), color (v/c), name (v/c)</span>
-<span class="co">#&gt; + edges from 506c2c7 (vertex names):</span>
-<span class="co">#&gt; [1] 5--8 7--8</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[2]]</span>
-<span class="co">#&gt; IGRAPH aa108b3 UN-- 3 2 -- Cubical</span>
-<span class="co">#&gt; + attr: name (g/c), color (v/c), name (v/c)</span>
-<span class="co">#&gt; + edges from aa108b3 (vertex names):</span>
-<span class="co">#&gt; [1] 5--6 6--7</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">steinertree</span>(<span class="dt">type =</span> <span class="st">&quot;SPM&quot;</span>, <span class="dt">terminals =</span> terminal_nodes[[<span class="dv">1</span>]],</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">            <span class="dt">graph =</span> g, <span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">merge =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="co">#&gt; [[1]]</span></a>
+<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="co">#&gt; IGRAPH e4fa6db UN-- 2 1 -- Cubical</span></a>
+<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="co">#&gt; + attr: name (g/c), color (v/c), name (v/c)</span></a>
+<a class="sourceLine" id="cb10-6" data-line-number="6"><span class="co">#&gt; + edge from e4fa6db (vertex names):</span></a>
+<a class="sourceLine" id="cb10-7" data-line-number="7"><span class="co">#&gt; [1] 1--4</span></a></code></pre></div>
 </div>
 <div id="optimization-of-resultant-tree" class="section level2">
 <h2>Optimization of resultant tree</h2>
-<p>Optimization means returning the minimum spanning tree on resultant graph and removing all non-terminal nodes of degree one. <strong>Note, that in version 2.0 this function was runned by default for several algorithms.</strong> Again it is explicitly available in version 3.0 for the sake of convenience.</p>
+<p>Optimization means returning the minimum spanning tree on resultant graph and removing all non-terminal nodes of degree one. <strong>Note, that in version 2.0 this function was run by default for several algorithms.</strong> Again it is explicitly available in version 3.0 for the sake of convenience.</p>
 <p>If you want to reproduce results of the article, you need to specify <code>optimize = TRUE</code> for the following algorithms:</p>
 <ul>
 <li>“SP”</li>
@@ -213,7 +432,7 @@ index &lt;-<span class="st"> </span><span class="kw">which</span>(tree_list_len 
 <li>“RSP”</li>
 <li>“SPM”</li>
 </ul>
-<p>For “EXA” algorithm this option is ignored. <strong>Note, that in version 2.0 for “ASP” algorithm optimization was not avaliable at all.</strong> It means, that experiments was condacted without further optimization.</p>
+<p>For “EXA” algorithm this option is ignored. <strong>Note, that in version 2.0 for “ASP” algorithm optimization was not avaliable at all.</strong> It means, that experiments was conducted without further optimization.</p>
 </div>
 <div id="article-results-reproducibility" class="section level2">
 <h2>Article results reproducibility</h2>
@@ -224,29 +443,32 @@ index &lt;-<span class="st"> </span><span class="kw">which</span>(tree_list_len 
 <li>etc.</li>
 </ul>
 <p>All vertices was selected with 0.5 probability. Therefore in <code>generate_st_samples</code> you probably passed the following:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># in version 2.0</span>
-<span class="co"># eval = FALSE</span>
-listofterminaltest &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">8</span>, <span class="dv">15</span>, <span class="dv">50</span>, <span class="dv">70</span>)
-repetition &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dt">x =</span> <span class="fl">0.5</span>, <span class="dv">50</span>)</code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="co"># in version 2.0</span></a>
+<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="co"># eval = FALSE</span></a>
+<a class="sourceLine" id="cb11-3" data-line-number="3">listofterminaltest &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">8</span>, <span class="dv">15</span>, <span class="dv">50</span>, <span class="dv">70</span>)</a>
+<a class="sourceLine" id="cb11-4" data-line-number="4">repetition &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dt">x =</span> <span class="fl">0.5</span>, <span class="dv">50</span>)</a></code></pre></div>
 <p>However, simultaneous work with the number of terminals selected and size of sets makes an output of some function too wired. So now you need to specify:</p>
 <ul>
-<li><code>ter_number</code>. Each element indicates the number of terminals to be selected and length of vector indecates the number of terminal sets to be picked.</li>
+<li><code>ter_number</code>. Each element indicates the number of terminals to be selected and length of vector indicates the number of terminal sets to be picked.</li>
 <li><code>prob</code>. prob[i] defines a propability with which each next node accepted or rejected while selecting ter_number[i] terminals. Usually this probability is the same for all terminals, so you may write something like this <code>prob = rep(0.5, #len of ter_number#)</code></li>
 </ul>
 <p>The main difference is that you can now operate with <strong>only one value</strong> of number of terminal sets. So to reproduce results of the article, firstly, you need, for example, generate 50 terminal sets with 5 terminals in each.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># in version 3.0</span>
-<span class="co"># eval = FALSE</span>
-<span class="kw">generate_st_samples</span>(<span class="dt">graph =</span> <span class="co">#your graph#,</span>
-                    <span class="dt">ter_number =</span> <span class="kw">rep</span>(<span class="dt">x =</span> <span class="dv">5</span>, <span class="dv">50</span>),
-                    <span class="dt">prob =</span> <span class="kw">rep</span>(<span class="dt">x =</span> <span class="dv">5</span>, <span class="dv">50</span>))</code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="co"># in version 3.0</span></a>
+<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="co"># eval = FALSE</span></a>
+<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="kw">generate_st_samples</span>(<span class="dt">graph =</span> <span class="co">#your graph#,</span></a>
+<a class="sourceLine" id="cb12-4" data-line-number="4">                    <span class="dt">ter_number =</span> <span class="kw">rep</span>(<span class="dt">x =</span> <span class="dv">5</span>, <span class="dv">50</span>),</a>
+<a class="sourceLine" id="cb12-5" data-line-number="5">                    <span class="dt">prob =</span> <span class="kw">rep</span>(<span class="dt">x =</span> <span class="dv">5</span>, <span class="dv">50</span>))</a></code></pre></div>
 <p>After running some simulations, secondly, you may want to generate 50 terminal sets with 8 terminals in each.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># in version 3.0</span>
-<span class="co"># eval = FALSE</span>
-<span class="kw">generate_st_samples</span>(<span class="dt">graph =</span> <span class="co">#your graph#,</span>
-                    <span class="dt">ter_number =</span> <span class="kw">rep</span>(<span class="dt">x =</span> <span class="dv">8</span>, <span class="dv">50</span>),
-                    <span class="dt">prob =</span> <span class="kw">rep</span>(<span class="dt">x =</span> <span class="dv">8</span>, <span class="dv">50</span>))</code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="co"># in version 3.0</span></a>
+<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="co"># eval = FALSE</span></a>
+<a class="sourceLine" id="cb13-3" data-line-number="3"><span class="kw">generate_st_samples</span>(<span class="dt">graph =</span> <span class="co">#your graph#,</span></a>
+<a class="sourceLine" id="cb13-4" data-line-number="4">                    <span class="dt">ter_number =</span> <span class="kw">rep</span>(<span class="dt">x =</span> <span class="dv">8</span>, <span class="dv">50</span>),</a>
+<a class="sourceLine" id="cb13-5" data-line-number="5">                    <span class="dt">prob =</span> <span class="kw">rep</span>(<span class="dt">x =</span> <span class="dv">8</span>, <span class="dv">50</span>))</a></code></pre></div>
 </div>
 
+
+
+<!-- code folding -->
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
